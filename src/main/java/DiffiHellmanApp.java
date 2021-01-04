@@ -1,23 +1,34 @@
+import java.math.BigInteger;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DiffiHellmanApp {
 
     public static void main(String[] args) {
-        int n = 23; //BigPrimeNumberGenerator.generate();
-        int g = 5; //PrimitiveRootGenerator.generate(n);
+        int n = BigPrimeNumberGenerator.generate();
+        int g = PrimitiveRootGenerator.generate(n);
+
+        BigInteger gBigInteger = BigInteger.valueOf(g);
+        BigInteger nBigInteger = BigInteger.valueOf(n);
+
         System.out.println("n: " + n + " g: " + g);
         //czyli "x"
-        int aPrivateKey = 6; //ThreadLocalRandom.current().nextInt(2, 20);
-        System.out.println("x: " +  aPrivateKey);
+        int aPrivateKey = ThreadLocalRandom.current().nextInt(2, 20);
+        System.out.println("aPrivateKey: " +  aPrivateKey);
         //czyli "X"
-        int x = (int) (Math.pow(g,aPrivateKey) % n);
+        BigInteger x = gBigInteger.pow(aPrivateKey).mod(nBigInteger);
+        System.out.println("x: " + x);
         //bPrivateKey -> "y"
-        int bPrivateKey = 15; //ThreadLocalRandom.current().nextInt(2, 20);
+        int bPrivateKey = ThreadLocalRandom.current().nextInt(2, 20);
+        System.out.println("bPrivateKey: " + bPrivateKey);
         //"y" -> "Y"
-        int y = (int) (Math.pow(g,bPrivateKey) % n);
-        int aK = (int) (Math.pow(y,aPrivateKey) % n);
-        int bK = (int) (Math.pow(x,bPrivateKey) % n);
+
+        BigInteger y = gBigInteger.pow(bPrivateKey).mod(nBigInteger);
+        System.out.println("y: " + y);
+
+        BigInteger aK = y.pow(aPrivateKey).mod(nBigInteger);
+        BigInteger bK = x.pow(bPrivateKey).mod(nBigInteger);
         System.out.println("aK: " + aK);
         System.out.println("bK: " + bK);
     }
+
 }
